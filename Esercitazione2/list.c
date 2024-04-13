@@ -57,7 +57,10 @@ int stampa_dir(char *path) // Stampa ricorsivamente i contenuti della cartella d
 			// ho direttorio
 			recursive = 1;
 			strcpy(type, "directory");
-			if(strcmp(entry->d_name, "..") == 0 || strcmp(entry->d_name, ".") == 0){ continue; } // evito ., .. sennò cicli infiniti ; alternativamente posso ignorarli del tutto
+			if(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+			{
+				continue; // skippo se ho . oppure ..
+			}
 		}
 
 		else if (S_ISLNK(buf.st_mode))
@@ -74,7 +77,7 @@ int stampa_dir(char *path) // Stampa ricorsivamente i contenuti della cartella d
 
 		else
 		{
-			continue; //ignoro e skippo!
+			strcpy(type, "other");
 		}
 
 		// Find owner and group name
@@ -84,9 +87,9 @@ int stampa_dir(char *path) // Stampa ricorsivamente i contenuti della cartella d
 		struct group *gr = getgrgid(buf.st_gid);
 		char *group1 = gr->gr_name;
 
-                printf("Node: %s \n\tInode: %ld \n\tType: %s \n\tSize: %ld \n\tOwner: %ld %s \n\tGroup: %ld %s \n\n",filepath, (long int)buf.st_ino, type, (long int)buf.st_size, (long int)buf.st_uid, owner,
+                printf("Node: %s \n\tInode: %ld \n\tType: %s \n\tSize: %ld \n\tOwner: %ld %s \n\tGroup: %ld %s \n",filepath, (long int)buf.st_ino, type, (long int)buf.st_size, (long int)buf.st_uid, owner,
 			(long int)buf.st_gid, group1);
-		if(recursive){ stampa_dir(filepath); }
+		if(recursive){ stampa_dir(filepath); } // passo ricorsivo. spaventoso!
 	}
 	int closedir(DIR *dir);
 	// ---
@@ -117,6 +120,15 @@ else{ // se va tutto bene...
 	}
 	else
 	{
+                struct passwd *user = getpwuid(buf.st_uid);
+                char *owner = user->pw_name; // Assegno puntatori a puntatori
+
+                struct group *gr = getgrgid(buf.st_gid);
+                char *group1 = gr->gr_name;
+
+                printf("Node: %s \n\tInode: %ld \n\tType: %s \n\tSize: %ld \n\tOwner: %ld %s \n\tGroup: %ld %s \n",argv[1], (long int)buf.st_ino, "directory", (long int)buf.st_size, (long int)buf.st_uid, owner,
+                        (long int)buf.st_gid, group1);
+
 		stampa_dir(argv[1]);
 	}
 	return 0;
