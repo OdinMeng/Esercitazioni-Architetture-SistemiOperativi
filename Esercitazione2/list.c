@@ -22,6 +22,8 @@ int stampa_dir(char *path) // Stampa ricorsivamente i contenuti della cartella d
 	// --- Codice principale
 	struct dirent* entry; // directory name
 	struct stat buf; // metadati
+	int recursive;
+	char type[MAXN];
 	while( (entry = readdir(d) ) != NULL)
 	{
 		char filepath[MAXN];
@@ -36,14 +38,13 @@ int stampa_dir(char *path) // Stampa ricorsivamente i contenuti della cartella d
 			// concateno stringhe finchè posso
 
 		// Trattamento a seconda se ho file o path o symlink o FIFO (?) o coso malformato
-		if( stat(filepath, &buf) < 0)
+		if( lstat(filepath, &buf) < 0)
 		{
 			printf("Errore nella lettura del file. Uscita. \n");
 			exit (1);
 		}
 
-		int recursive=0;
-		char type[MAXN];
+		recursive=0;
 		if (S_ISREG(buf.st_mode) )
 		{
 			// ho file normale
@@ -61,7 +62,7 @@ int stampa_dir(char *path) // Stampa ricorsivamente i contenuti della cartella d
 
 		else if (S_ISLNK(buf.st_mode))
 		{
-			strcpy(type, "symlink");
+			strcpy(type, "symbolic link");
 			// ho link simbolico; se è un link ad una cartella NON lo visito, per evitare cicli infiniti. Altrimenti lo visito
 		}
 
@@ -70,6 +71,7 @@ int stampa_dir(char *path) // Stampa ricorsivamente i contenuti della cartella d
 			strcpy(type, "FIFO");
 			// ho FIFO, non so che voglia dire
 		}
+
 		else
 		{
 			continue; //ignoro e skippo!
