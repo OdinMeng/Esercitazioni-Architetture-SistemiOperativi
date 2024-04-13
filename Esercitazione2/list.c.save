@@ -2,11 +2,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
+// #include ...
 #include <stdlib.h>
 #include <string.h>
-
-#include <pwd.h>
-#include <grp.h>
 
 #define MAXN 256
 
@@ -34,6 +32,7 @@ int stampa_dir(char *path) // Stampa ricorsivamente i contenuti della cartella d
 		strcat(filepath, "/");
 		strcat(filepath, entry->d_name);
 			// concateno stringhe finchè posso
+		printf("opened in %s \n", filepath);
 
 		// Trattamento a seconda se ho file o path o symlink o FIFO (?) o coso malformato
 		if( stat(filepath, &buf) < 0)
@@ -42,49 +41,30 @@ int stampa_dir(char *path) // Stampa ricorsivamente i contenuti della cartella d
 			exit (1);
 		}
 
-		int recursive=0;
-		char type[MAXN];
 		if (S_ISREG(buf.st_mode) )
 		{
 			// ho file normale
-			strcpy(type, "file");
 			// Info interessati: Inode, type, size, owner, group, node (path)
+			printf("Node: %ld \n Type: file \n Size: %ld \n Owner: %ld %s \n Group: %ld %s \n Node: %s", TODO);
 		}
 
 		else if (S_ISDIR(buf.st_mode))
 		{
 			// ho direttorio
-			recursive = 1;
-			strcpy(type, "directory");
-			if(strcmp(entry->d_name, "..") == 0 || strcmp(entry->d_name, ".") == 0){ recursive = 0; } // evito ., .. sennò cicli infiniti blablabla
+                        printf("Node: %ld \n Type: file \n Size: %ld \n Owner: %ld %s \n Group: %ld %s \n Node: %s", TODO);
+			stampa_dir(filepath) // passo ricorsivo (spaventoso!)
 		}
 
 		else if (S_ISLNK(buf.st_mode))
 		{
-			strcpy(type, "symlink");
 			// ho link simbolico; se è un link ad una cartella NON lo visito, per evitare cicli infiniti. Altrimenti lo visito
+
 		}
 
 		else if (S_ISFIFO(buf.st_mode))
 		{
-			strcpy(type, "FIFO");
 			// ho FIFO, non so che voglia dire
 		}
-		else
-		{
-			continue; //ignoro e skippo!
-		}
-
-		// Find owner and group name
-		struct passwd *user = getpwuid(buf.st_uid);
-		char *owner = user->pw_name; // Assegno puntatori a puntatori
-
-		struct group *gr = getgrgid(buf.st_gid);
-		char *group1 = gr->gr_name;
-
-                printf("Node: %ld \nType: %s \nSize: %ld \nOwner: %ld %s \nGroup: %ld %s \nNode: %s\n\n", (long int)buf.st_ino, type, (long int)buf.st_size, (long int)buf.st_uid, owner,
-			(long int)buf.st_gid, group1, filepath);
-		if(recursive){ stampa_dir(filepath); }
 	}
 	int closedir(DIR *dir);
 	// ---
@@ -108,6 +88,7 @@ int main(int argc, char * argv[])
 	}
 
 else{ // se va tutto bene...
+	// TODO: Modificare
 	if (!S_ISDIR(buf.st_mode))
 	{
 		printf("Errore: il path specificato non è una directory \n");
