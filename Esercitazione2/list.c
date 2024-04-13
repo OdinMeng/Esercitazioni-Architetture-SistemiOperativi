@@ -56,7 +56,7 @@ int stampa_dir(char *path) // Stampa ricorsivamente i contenuti della cartella d
 			// ho direttorio
 			recursive = 1;
 			strcpy(type, "directory");
-			if(strcmp(entry->d_name, "..") == 0 || strcmp(entry->d_name, ".") == 0){ recursive = 0; } // evito ., .. sennò cicli infiniti blablabla
+			if(strcmp(entry->d_name, "..") == 0 || strcmp(entry->d_name, ".") == 0){ continue; } // evito ., .. sennò cicli infiniti ; alternativamente posso ignorarli del tutto
 		}
 
 		else if (S_ISLNK(buf.st_mode))
@@ -82,8 +82,8 @@ int stampa_dir(char *path) // Stampa ricorsivamente i contenuti della cartella d
 		struct group *gr = getgrgid(buf.st_gid);
 		char *group1 = gr->gr_name;
 
-                printf("Node: %ld \nType: %s \nSize: %ld \nOwner: %ld %s \nGroup: %ld %s \nNode: %s\n\n", (long int)buf.st_ino, type, (long int)buf.st_size, (long int)buf.st_uid, owner,
-			(long int)buf.st_gid, group1, filepath);
+                printf("Node: %s \n\tInode: %ld \n\tType: %s \n\tSize: %ld \n\tOwner: %ld %s \n\tGroup: %ld %s \n\n",filepath, (long int)buf.st_ino, type, (long int)buf.st_size, (long int)buf.st_uid, owner,
+			(long int)buf.st_gid, group1);
 		if(recursive){ stampa_dir(filepath); }
 	}
 	int closedir(DIR *dir);
