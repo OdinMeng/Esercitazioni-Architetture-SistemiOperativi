@@ -85,7 +85,10 @@ int main(int argc, char* argv[])
 
 		else
 		{ // Son
-			close(pipe_n[1]);
+			for(int j=0; j<=i;j++)
+			{
+				close(pipes[j][1]);
+			}
 			char to_execute[MAXN];
 			while(read(pipe_n[0], to_execute, MAXN)>0 ){ system(to_execute); }
 			exit(0);
