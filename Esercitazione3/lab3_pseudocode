@@ -1,0 +1,73 @@
+# PSEUDOCODE!
+
+Idea.	Leggo il file, creo un vettore di argomenti sostituendo il % con quello che c'è da sostituire. 
+	Dopodichè itero su n elementi, creando n processi. Per ogni processo eseguo il mod n-esimo comando. Ovvero,
+		processo 1 -> comando 0, comando n, comando 2n, ...
+		processo 2 -> comando 1, comando n+1, comando 2n+1, ...
+		...
+		processo m<n -> comando m, comando n+m, comando 2n+m, ...
+		...
+	Uso le pipe per comunicare i comandi. Uso vettori di pipe.
+	Per terminare il programma, attendo la chiusura dell'ultimo pipe (pipe[n]).
+
+
+// Fase 0
+if argc != 4
+	Usage: ./parallel [filename] [n] [command]
+
+if (FILE * f = fopen(argc[0], "r") == NULL)
+	File {argc[0]} not readable
+
+if (n = atoi(argc[1] == 0))
+	n has to be an integer
+
+# Non controllo il comando
+
+// Fase 1
+char* to_replace;
+to_replace = strstr(comand, "%")
+char* to_replace_new = to_replace # Devo trovare qualcos altro...
+
+char* commands[MAXN];
+FILE* f = fopen(file, r)
+char buffer[MAXN];
+
+while fgets(buffer, sizeof(buffer), f)!=NULL do
+	strcpy(to_replace_new, buffer)
+	to_replace_new = to_replace # NO!
+		
+
+fclose(f)
+
+// Fase 2
+int pipes[MAXPRC][2]
+
+if n > MAXPRC:
+	error!
+
+for i in {0<i<n}
+	int pipe_n = pipes[i]
+	pipe(pipe_n)
+
+	if(fork() )
+		// Father
+		close(pipe_n[0])
+		for j=i, i+=n, i<n
+			write(pipe_n[1], MAXN, commands[j])
+		close(pipe[1])
+		continue // Continues making children, while abandoning them
+
+	else
+		// Son
+		close(pipe_n[1])
+		char* to_execute[MAXN]
+		while(read(pipe_n[0], MAXN, to_execute) > 0 )
+			system(to_execute)
+		exit(0) // Closes pipe and commits suicide	
+
+while(wait(NULL)>0){}
+
+return 0 # Hooray! (maybe?)
+
+# Si può farlo ricorsivamente (forse? non grazie, però)
+

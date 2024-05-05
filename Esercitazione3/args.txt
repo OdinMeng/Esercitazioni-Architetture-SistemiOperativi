@@ -1,0 +1,4 @@
+/etc/resolv.conf
+/etc/fstab
+/etc/hostname
+/etc/hosts
