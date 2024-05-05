@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
 
 		if(fork()){ // Father
 			close(pipe_n[0]);
-			for(int j=i; j<n; j+=n)
+			for(int j=i; j<ctr; j+=n)
 			{
 				write(pipe_n[1], commands[j], MAXN);
 			}
