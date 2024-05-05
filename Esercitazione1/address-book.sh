@@ -23,7 +23,7 @@ then
 	then
 		mode=3
 	else
-		echo "Error: argomento fornito invalido"
+		echo "Use: address-book [view/insert]"
 	fi
 fi
 
@@ -37,7 +37,7 @@ then
 		then
 		mode=4
 	else
-		echo "Error: argomento/i fornito invalido"
+		echo "Error: address-book [search/delete] [argument]"
 	fi
 fi
 
@@ -49,10 +49,8 @@ then
 	lines=$(cat $filename | wc -l | cut -d " " -f 1)
 	lines=$(($lines-1))
 	# stampo l'header
-	cat $filename | head -n 1 | column -s "," -o " " -t
-
-	# stampo il resto del file ordinato
-	cat $filename | tail -n $lines | column -s "," -o " " -t | sort -k 4 -t " "
+	header=$(cat $filename | head -n 1 | column -s "," -o "," -t)
+	cat $filename | tail -n $lines | sort -k 4 -t "," | column --table -s "," -o " " -t -N $header
 fi
 
 # Search mode: cerco contenuto
@@ -64,20 +62,26 @@ then
 	lines=$(cat $filename | wc -l | cut -d " " -f 1)
 	lines=$(($lines-1))
 	found=0
+	first=1
 	for line in $(cat $filename | tail -n $lines)
 	do
 		match=$(echo $line | grep $2 )
 		if [[ ! -z $match ]]
 		then
+			if (( first>0 ))
+			then
+				first=0
+			else
+				echo
+			fi
 			found=1
-			ctr=1 # Counter to keep count if it's name, surname, phgone ,dfbpìdf ijge sdgrhu0s9v
+			ctr=1
 			IFS=","
-			for arg in $match
+			for arg in $line
 			do
 				if (( $ctr>6 ))
 				then
 					ctr=1
-					echo -e
 				fi
 				pre=$(head -1 $filename | cut -f $ctr -d ",")
 				echo ${pre^}: $arg # ^ per primo caratterer maiusc.
@@ -115,7 +119,7 @@ then
 
 	# controllo mail
 	mail=$(echo $insert | cut -f 4 -d ",")
-	matches=$(grep $mail test.csv | cut -f 4 -d ",")
+	matches=$(grep $mail $filename | cut -f 4 -d ",")
 	for match in $matches
 	do
 		if [[ $mail = $match ]]
@@ -154,6 +158,7 @@ then
 	then
 #		echo $number
 		sed -i "${number}d" $filename
+		echo "Deleted"
 
 	elif (( $number == -1 ))
 	then
