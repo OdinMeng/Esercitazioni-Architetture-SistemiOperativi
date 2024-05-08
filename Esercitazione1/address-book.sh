@@ -8,7 +8,7 @@
 # 4. cancel mode -> 1 argomento
 
 mode=0
-filename="./address-book-database.csv" # TO-DO: DA MODIFICARE PER LA CONSEGNA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+filename="test.csv" # TO-DO: DA MODIFICARE PER LA CONSEGNA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 # ==== Mappatura argomenti =====
@@ -37,7 +37,7 @@ then
 		then
 		mode=4
 	else
-		echo "Error: address-book [search/delete] [argument]"
+		echo "Use: address-book [search/delete] [argument]"
 	fi
 fi
 
@@ -49,7 +49,7 @@ then
 	lines=$(cat $filename | wc -l | cut -d " " -f 1)
 	lines=$(($lines-1))
 	# stampo l'header
-	header=$(cat $filename | head -n 1 | column -s "," -o "," -t)
+	header=$(cat $filename | head -n 1)
 	cat $filename | tail -n $lines | sort -k 4 -t "," | column --table -s "," -o " " -t -N $header
 fi
 
@@ -81,7 +81,7 @@ then
 			do
 				if (( $ctr>6 ))
 				then
-					ctr=1
+					ctr=1 # this piece of code should never be run
 				fi
 				pre=$(head -1 $filename | cut -f $ctr -d ",")
 				echo ${pre^}: $arg # ^ per primo caratterer maiusc.
