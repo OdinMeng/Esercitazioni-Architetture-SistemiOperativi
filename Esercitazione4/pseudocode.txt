@@ -1,0 +1,52 @@
+Phases
+1. Initialize
+	- Read catalog.txt line by line (fopen), (fgets(buffer, MAXLINE, f)
+	- Check if each line (string) has its own semaphore
+		- sem_open(str, O_CREAT | O_EXCL, 1)
+			- if null:
+				- sem_open(str, O_CREAT)
+		- Put each sem_t pointer in a buffer (MAXSEM)
+		- Put each string in a string buffer (MAXSEM)
+		- Variable ctr to keep track of number of cars
+	- Close file
+
+2. Do stuff
+	- Infinity loop:
+		- printf("Command: ");
+		- scanf("%s", command);
+			- if (strcmp(command, "view")!=0 && ... && strcmp(...)!=0)
+				- Unknown Command
+			- else
+				- view: 
+					- Iterate from 0 to ctr-1 of car list
+					- sem_trywait(sem_t[ctr])
+					- if -1: busy
+					- else: free, then post on sem_t[ctr]
+					- print("Car %s, status %s", string, status)
+				- lock <car>
+					- Auxiliary function to:
+						- find if <car> in buffer
+						- find index for semaphore
+					- if <car> not in string buffer:
+						- Cannot find car <car>
+					- else:
+						- try_wait(sembuffer[index])
+							- -1: Error. Car <car> already locked
+							- else: Car: <car> is now locked
+
+				- release <car>
+					- Same auxiliary function
+					- getvalue(sembuffer[index])
+						- if 0: post and print
+						- if 1: error
+						- if >=1: should not happen!
+				- quit
+					- Close every semaphore (DO NOT UNLINK!)
+					- Exit with code 0
+
+Modules:
+	- <semaphore.h>
+	- <string.h>
+	- <stdlib.h>
+	- <fcntl.h>
+	- <sys/stat.h>

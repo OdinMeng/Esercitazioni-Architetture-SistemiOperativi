@@ -1,0 +1,2 @@
+#!/bin/bash
+gcc car_park.c -o car_park
