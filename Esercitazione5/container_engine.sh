@@ -69,4 +69,29 @@ do
 done
 
 # Phase 2: execute command
-fakechroot chroot $container_filepath $command $command_args
+
+# Note: desperate. not proud of this, only way i could think of
+if (( $# == 2 ))
+then
+fakechroot chroot $container_filepath $command
+fi
+
+if (( $# == 3 ))
+then
+fakechroot chroot $container_filepath $command $3
+fi
+
+if (( $# == 4 ))
+then
+fakechroot chroot $container_filepath $command $3 $4
+fi
+
+if (( $# == 5 ))
+then
+fakechroot chroot $container_filepath $command $3 $4 $5
+fi
+
+if (( $# == 6 ))
+then
+fakechroot chroot $container_filepath $command $3 $4 $5 $6
+fi

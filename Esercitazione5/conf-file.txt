@@ -3,3 +3,6 @@
 /bin/bash /bin/bash
 /lib /lib
 /lib64 /lib64
+/usr/bin/whoami /bin/whoami
+/usr/bin/mkdir /bin/mkdir
+/usr/bin/echo /bin/echo
