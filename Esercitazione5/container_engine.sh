@@ -8,7 +8,8 @@ fi
 
 # Set variables from arguments
 filepath=$1
-command=${@:2}
+command=$2
+command_args=${@:3}
 
 # Check if filepath exists, refers to a file and is readable
 if [[ ! -a $filepath ]]
@@ -34,7 +35,7 @@ fi
 # Starts doing magic
 
 # Phase 0: create temporary work file
-container_filepath="./container_engine_temp4"
+container_filepath="./container_engine_temp"
 mkdir $container_filepath
 
 # Phase 1: create work environment for the container
@@ -58,13 +59,14 @@ do
 		# Creates every directory necessary, and deletes the last one (which should be a file)
 		mkdir -p $container_filepath$destination
 		rmdir $container_filepath$destination
-		chmod +x $container_filepath$destination
 
 		touch $container_filepath$destination
 		cp $origin $container_filepath$destination
+		chmod +x $container_filepath$destination
+
 	fi
 
 done
 
 # Phase 2: execute command
-fakechroot chroot $container_filepath $command
+fakechroot chroot $container_filepath $command $command_args
