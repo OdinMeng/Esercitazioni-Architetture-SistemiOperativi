@@ -1,0 +1,5 @@
+/usr/bin/ls /bin/ls
+/usr/bin/ps /bin/ps
+/bin/bash /bin/bash
+/lib /lib
+/lib64 /lib64
